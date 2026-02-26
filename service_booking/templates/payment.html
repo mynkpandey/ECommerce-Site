@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="glass-card p-5">
+            <div class="text-center mb-5">
+                <div class="avatar-circle mx-auto mb-3 bg-primary bg-opacity-10 text-primary"
+                    style="width: 80px; height: 80px; font-size: 2rem;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h2 class="fw-bold text-gradient mb-1">Secure Checkout</h2>
+                <p class="text-muted small uppercase tracking-more">Order Reference: #SB-{{ booking.id }}</p>
+            </div>
+
+            <div class="glass-card mb-5 p-4 bg-white bg-opacity-5 border-white border-opacity-10">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">{{ booking.service.name }}</span>
+                    <span class="text-white">₹{{ booking.service.price }}</span>
+                </div>
+                <div class="d-flex justify-content-between pt-2 border-top border-white border-opacity-10 mt-2 fw-bold">
+                    <span class="text-muted">Total Amount</span>
+                    <span class="text-primary fs-4">₹{{ booking.service.price }}</span>
+                </div>
+            </div>
+
+            <form action="{% url 'process_payment' booking.id %}" method="POST">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label class="form-label text-muted small text-uppercase tracking-wider">Card Number</label>
+                    <div class="input-group">
+                        <span
+                            class="input-group-text bg-transparent border-secondary text-muted rounded-start-pill ps-4">
+                            <i class="fas fa-credit-card"></i>
+                        </span>
+                        <input type="text"
+                            class="form-control bg-transparent border-secondary border-start-0 text-white p-3 rounded-end-pill"
+                            placeholder="0000 0000 0000 0000" required>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-5">
+                    <div class="col-6">
+                        <label class="form-label text-muted small text-uppercase tracking-wider">Expiry Date</label>
+                        <input type="text"
+                            class="form-control bg-transparent border-secondary text-white p-3 rounded-pill"
+                            placeholder="MM/YY" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-muted small text-uppercase tracking-wider">CVV</label>
+                        <input type="text"
+                            class="form-control bg-transparent border-secondary text-white p-3 rounded-pill"
+                            placeholder="123" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-premium w-100 py-3 shadow-lg">
+                    Pay Now <i class="fas fa-lock ms-2"></i>
+                </button>
+            </form>
+
+            <div class="text-center mt-4">
+                <i class="fab fa-cc-visa fa-2x text-muted mx-2"></i>
+                <i class="fab fa-cc-mastercard fa-2x text-muted mx-2"></i>
+                <i class="fab fa-cc-amex fa-2x text-muted mx-2"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+        color: white;
+    }
+
+    .tracking-more {
+        letter-spacing: 0.15em;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}

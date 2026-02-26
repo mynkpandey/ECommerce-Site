@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="glass-card p-5">
+            <div class="mb-4">
+                <span class="badge bg-primary bg-opacity-10 text-primary mb-2 rounded-pill px-3">
+                    Confirm Appointment
+                </span>
+                <h2 class="fw-bold text-gradient mb-1">Book: {{ service.name }}</h2>
+                <p class="text-muted"><i class="fas fa-user-tie me-2"></i>with {{ service.provider.username }}</p>
+            </div>
+
+            <div class="glass-card p-4 mb-5 border-primary border-opacity-25 bg-primary bg-opacity-5">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted small mb-0 font-monospace text-uppercase">Service Price</p>
+                        <h4 class="mb-0 text-primary">₹{{ service.price }}</h4>
+                    </div>
+                    <div>
+                        <p class="text-muted small mb-0 font-monospace text-uppercase text-end">Duration</p>
+                        <h4 class="mb-0 text-end">{{ service.duration }} <small
+                                class="fw-normal text-muted">mins</small></h4>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label class="form-label text-muted small text-uppercase tracking-wider">Select Date</label>
+                    <div class="input-group">
+                        <span
+                            class="input-group-text bg-transparent border-secondary text-muted rounded-start-pill ps-4">
+                            <i class="fas fa-calendar-day"></i>
+                        </span>
+                        <input type="date" name="date"
+                            class="form-control bg-transparent border-secondary border-start-0 text-white p-3 rounded-end-pill"
+                            required>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label text-muted small text-uppercase tracking-wider">Select Time Slot</label>
+                    <div class="input-group">
+                        <span
+                            class="input-group-text bg-transparent border-secondary text-muted rounded-start-pill ps-4">
+                            <i class="fas fa-clock"></i>
+                        </span>
+                        <input type="time" name="time"
+                            class="form-control bg-transparent border-secondary border-start-0 text-white p-3 rounded-end-pill"
+                            required>
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-premium py-3 shadow-lg">
+                        Confirm Booking <i class="fas fa-calendar-check ms-2"></i>
+                    </button>
+                    <a href="{% url 'home' %}" class="btn btn-link text-muted mt-3 text-decoration-none small">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Services
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+        color: white;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+        cursor: pointer;
+    }
+</style>
+{% endblock %}

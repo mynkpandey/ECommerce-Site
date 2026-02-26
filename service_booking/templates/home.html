@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row align-items-center mb-5">
+    <div class="col-lg-7">
+        <h1 class="display-4 fw-bold text-gradient mb-3">Find & Book <br>Excellent Services</h1>
+        <p class="lead text-muted">Discover top-rated professionals for all your needs. Real-time scheduling, secure
+            payments, and premium experience.</p>
+    </div>
+    <div class="col-lg-5 d-none d-lg-block">
+        <div class="glass-card p-4 text-center">
+            <i class="fas fa-calendar-alt fa-5x text-primary mb-3"></i>
+            <h3>Seamless Booking</h3>
+            <p class="text-muted small">Book your next appointment in just a few clicks.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Category Filter -->
+<div class="mb-5 overflow-auto pb-3">
+    <div class="d-flex align-items-center gap-3">
+        <a href="{% url 'home' %}"
+            class="btn {% if not active_category %}btn-premium{% else %}btn-outline-secondary{% endif %} rounded-pill px-4">
+            All Services
+        </a>
+        {% for category in categories %}
+        <a href="{% url 'home' %}?category={{ category.id }}"
+            class="btn {% if active_category == category.id %}btn-premium{% else %}btn-outline-secondary{% endif %} rounded-pill px-4 d-flex align-items-center">
+            <i class="{{ category.icon }} me-2"></i> {{ category.name }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<h2 class="mb-4 text-gradient">Available Services</h2>
+
+<div class="row g-4">
+    {% for service in services %}
+    <div class="col-md-6 col-xl-4">
+        <div class="glass-card h-100 p-4 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <span class="badge bg-primary bg-opacity-10 text-primary mb-2 rounded-pill px-3">
+                        {{ service.category.name|default:"General" }}
+                    </span>
+                    <h4 class="mb-1">{{ service.name }}</h4>
+                    <p class="text-muted small mb-0"><i class="fas fa-user-tie me-1"></i> {{ service.provider.username
+                        }}</p>
+                </div>
+            </div>
+
+            <p class="text-muted mb-4 flex-grow-1">
+                {{ service.description|truncatewords:20 }}
+            </p>
+
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+                <div>
+                    <h5 class="mb-0 text-primary">₹{{ service.price }}</h5>
+                    <small class="text-muted"><i class="far fa-clock me-1"></i> {{ service.duration }} mins</small>
+                </div>
+
+                {% if user.is_authenticated %}
+                <a href="{% url 'book_service' service.id %}" class="btn btn-premium btn-sm">
+                    Book Now <i class="fas fa-arrow-right ms-1 small"></i>
+                </a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm rounded-pill">
+                    Login to Book
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="glass-card p-5 text-center">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No services found</h4>
+            <p class="text-muted mb-0">Try selecting a different category or check back later.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

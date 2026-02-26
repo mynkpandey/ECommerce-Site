@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="glass-card p-5 mt-4">
+            <div class="text-center mb-4">
+                <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+                <h2 class="fw-bold text-gradient">Create Account</h2>
+                <p class="text-muted">Join the ServiceHub community today</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label class="form-label text-muted small text-uppercase tracking-wider">Username</label>
+                        <input type="text" name="username"
+                            class="form-control bg-transparent border-secondary text-white p-3 rounded-pill"
+                            placeholder="Choose a username" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label text-muted small text-uppercase tracking-wider">Email Address</label>
+                        <input type="email" name="email"
+                            class="form-control bg-transparent border-secondary text-white p-3 rounded-pill"
+                            placeholder="name@example.com" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label text-muted small text-uppercase tracking-wider">Password</label>
+                        <input type="password" name="password"
+                            class="form-control bg-transparent border-secondary text-white p-3 rounded-pill"
+                            placeholder="••••••••" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label text-muted small text-uppercase tracking-wider">Account Type</label>
+                        <select name="role"
+                            class="form-select bg-transparent border-secondary text-white p-3 rounded-pill">
+                            <option value="USER" class="text-dark">I want to book services</option>
+                            <option value="PROVIDER" class="text-dark">I want to provide services</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-premium w-100 py-3 mt-5 shadow-lg">
+                    Create Account <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+            </form>
+
+            <div class="text-center mt-4">
+                <p class="text-muted small">Already have an account? <a href="{% url 'login' %}"
+                        class="text-primary text-decoration-none fw-bold">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:focus,
+    .form-select:focus {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+        color: white;
+    }
+
+    .form-control::placeholder {
+        color: #475569;
+    }
+
+    select option {
+        background: white;
+        color: black;
+    }
+</style>
+{% endblock %}

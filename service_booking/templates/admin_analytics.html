@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row align-items-end mb-4">
+    <div class="col-md-8">
+        <h1 class="display-5 fw-bold text-gradient mb-1">Platform Analytics</h1>
+        <p class="text-muted mb-0">Centralized oversight of users, services, and revenue streams.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <button class="btn btn-premium btn-sm" onclick="window.print()">
+            <i class="fas fa-file-export me-2"></i>Export Report
+        </button>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="glass-card p-4 h-100 text-center">
+            <div class="d-flex align-items-center justify-content-center mb-3 text-primary">
+                <i class="fas fa-users fa-2x"></i>
+            </div>
+            <h3 class="fw-bold mb-1">{{ total_users }}</h3>
+            <p class="text-muted small mb-0 font-monospace text-uppercase tracking-wider">Total Users</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-card p-4 h-100 text-center">
+            <div class="d-flex align-items-center justify-content-center mb-3 text-info">
+                <i class="fas fa-user-tie fa-2x"></i>
+            </div>
+            <h3 class="fw-bold mb-1">{{ total_providers }}</h3>
+            <p class="text-muted small mb-0 font-monospace text-uppercase tracking-wider">Providers</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-card p-4 h-100 text-center">
+            <div class="d-flex align-items-center justify-content-center mb-3 text-warning">
+                <i class="fas fa-calendar-check fa-2x"></i>
+            </div>
+            <h3 class="fw-bold mb-1">{{ total_bookings }}</h3>
+            <p class="text-muted small mb-0 font-monospace text-uppercase tracking-wider">Bookings</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-card p-4 h-100 text-center">
+            <div class="d-flex align-items-center justify-content-center mb-3 text-success">
+                <i class="fas fa-wallet fa-2x"></i>
+            </div>
+            <h3 class="fw-bold mb-1">₹{{ total_revenue|default:0 }}</h3>
+            <p class="text-muted small mb-0 font-monospace text-uppercase tracking-wider">Revenue</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="glass-card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0 fw-bold">Platform Overview</h5>
+                <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Live Feed</span>
+            </div>
+            <canvas id="platformChart" height="250"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="glass-card p-4 h-100">
+            <h5 class="mb-4 fw-bold">Role Distribution</h5>
+            <canvas id="distributionChart" height="250"></canvas>
+            <div class="mt-4">
+                <div class="d-flex justify-content-between small text-muted mb-2">
+                    <span>Active Services</span>
+                    <span class="text-main fw-bold">{{ total_services }}</span>
+                </div>
+                <div class="progress" style="height: 6px; background: rgba(255,255,255,0.05);">
+                    <div class="progress-bar bg-primary" style="width: 75%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx1 = document.getElementById('platformChart').getContext('2d');
+    const ctx2 = document.getElementById('distributionChart').getContext('2d');
+
+    // Platform Chart (Bar)
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Users', 'Providers', 'Services', 'Bookings'],
+            datasets: [{
+                label: 'Platform metrics',
+                data: [
+                    parseInt("{{ total_users|default:0 }}"),
+                    parseInt("{{ total_providers|default:0 }}"),
+                    parseInt("{{ total_services|default:0 }}"),
+                    parseInt("{{ total_bookings|default:0 }}")
+                ],
+                backgroundColor: 'rgba(99, 102, 241, 0.5)',
+                borderColor: '#6366f1',
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // Distribution Chart (Doughnut)
+    new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels: ['Users', 'Providers'],
+            datasets: [{
+                data: [
+                    parseInt("{{ total_users|default:0 }}"),
+                    parseInt("{{ total_providers|default:0 }}")
+                ],
+                backgroundColor: ['#6366f1', '#a855f7'],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: '#94a3b8', font: { family: 'Outfit' } } }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

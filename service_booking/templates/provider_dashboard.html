@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-md-8">
+        <h1 class="display-5 fw-bold text-gradient mb-1">Provider Dashboard</h1>
+        <p class="text-muted mb-0">Manage incoming service requests and track your performance.</p>
+    </div>
+</div>
+
+<div class="glass-card overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" style="color: var(--text-main);">
+            <thead class="bg-primary bg-opacity-10">
+                <tr>
+                    <th class="ps-4 py-3 text-muted small text-uppercase font-monospace">User</th>
+                    <th class="py-3 text-muted small text-uppercase font-monospace">Service</th>
+                    <th class="py-3 text-muted small text-uppercase font-monospace">Appointment</th>
+                    <th class="py-3 text-muted small text-uppercase font-monospace">Status</th>
+                    <th class="pe-4 py-3 text-end text-muted small text-uppercase font-monospace">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr style="border-bottom-color: var(--glass-border);">
+                    <td class="ps-4 py-4">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-circle me-3 bg-secondary bg-opacity-25 text-secondary">
+                                {{ booking.user.username|make_list|first|upper }}
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">{{ booking.user.username }}</h6>
+                                <small class="text-muted">{{ booking.user.email }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">
+                            {{ booking.service.name }}
+                        </span>
+                    </td>
+                    <td class="py-4">
+                        <div class="d-flex flex-column">
+                            <span><i class="far fa-calendar-alt me-2 text-muted"></i>{{ booking.date|date:"M d, Y"
+                                }}</span>
+                            <small class="text-muted"><i class="far fa-clock me-2"></i>{{ booking.time|time:"H:i"
+                                }}</small>
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        {% if booking.status == 'Accepted' %}
+                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">
+                            <i class="fas fa-check-circle me-1"></i> {{ booking.status }}
+                        </span>
+                        {% elif booking.status == 'Rejected' %}
+                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3">
+                            <i class="fas fa-times-circle me-1"></i> {{ booking.status }}
+                        </span>
+                        {% else %}
+                        <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3">
+                            <i class="fas fa-hourglass-half me-1"></i> {{ booking.status }}
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="pe-4 py-4 text-end">
+                        {% if booking.status == 'Pending' %}
+                        <div class="btn-group">
+                            <a href="{% url 'update_booking' booking.id 'Accepted' %}"
+                                class="btn btn-premium btn-sm rounded-pill px-3 me-2">
+                                Accept
+                            </a>
+                            <a href="{% url 'update_booking' booking.id 'Rejected' %}"
+                                class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                Reject
+                            </a>
+                        </div>
+                        {% else %}
+                        <span class="text-muted small">Updated</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="py-5 text-center">
+                        <div class="py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No bookings received yet</h5>
+                            <p class="text-muted mb-0">Manage services and wait for incoming requests.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .table-hover tbody tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .btn-group .btn {
+        transition: all 0.2s ease;
+    }
+</style>
+{% endblock %}
